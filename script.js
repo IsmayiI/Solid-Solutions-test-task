@@ -11,10 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
       node.append(btn);
    }
 
-   function createNode(parent, id) {
+   function createNode(parent) {
       const node = document.createElement('div');
       node.className = 'node active';
-      node.id = id;
 
       createBtn('btn btn-secondary toggle-btn d-none', '&#8600;', node)
       createBtn('btn btn-success mr-2 add-node', '+', node)
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const text = document.createElement('span');
       text.className = 'node-text';
-      text.textContent = 'Node ' + id;
+      text.textContent = generateRandomString();
       node.append(text);
 
       const line = document.createElement('div');
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
    createRootBtn.addEventListener('click', function () {
-      createNode(tree, 1);
+      createNode(tree);
       updateLocalStorage();
    });
 
@@ -44,13 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const parentNode = target.parentNode
 
       if (parentNode.classList.contains('active') && target.classList.contains('add-node')) {
-         const parentId = parentNode.id;
-
-         const newId = parentId + (parentNode.querySelectorAll('.node').length + 1);
          const childNode = parentNode.querySelector('.toggle-btn');
          childNode.classList.remove('d-none');
 
-         createNode(parentNode, newId);
+         createNode(parentNode);
          updateLocalStorage();
       }
 
@@ -78,5 +74,18 @@ document.addEventListener('DOMContentLoaded', function () {
    const savedTreeData = localStorage.getItem('treeData');
    if (savedTreeData) {
       tree.innerHTML = savedTreeData;
+   }
+
+
+   function generateRandomString() {
+      const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+      let randomString = '';
+
+      for (let i = 0; i < 3; i++) {
+         const randomIndex = Math.floor(Math.random() * alphabet.length);
+         randomString += alphabet.charAt(randomIndex);
+      }
+
+      return randomString;
    }
 });
